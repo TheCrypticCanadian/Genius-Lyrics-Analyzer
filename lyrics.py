@@ -1,3 +1,5 @@
+import nltk
+from nltk.corpus import stopwords
 import lyricsgenius
 import spotipy
 import constants
@@ -5,6 +7,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 from pprint import pprint
 
 if __name__ == "__main__":
+    nltk.download('stopwords')
+
     genius = lyricsgenius.Genius(constants.GENIUS_ACCESS_TOKEN)
     
     genius.remove_section_headers = True
@@ -27,8 +31,15 @@ if __name__ == "__main__":
             print()
             song = genius.search_song(str(track['name']),str(track['artists'][0]['name']))
             print(song.lyrics)
+            songList.append(song.lyrics)
 
-
+    words = songList[0].split()
+    #print(words)
+    stopwords = stopwords.words('english')
+    for word in words:
+        if word in stopwords:
+            words.remove(word)
+    #print(words)
     """
     for idx, album in enumerate(results['albums']['items']):
         pprint(album)
